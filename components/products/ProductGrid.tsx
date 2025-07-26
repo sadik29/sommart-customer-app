@@ -1,4 +1,5 @@
 import React from "react";
+import { useRouter } from "expo-router";
 import {
   View,
   Text,
@@ -33,6 +34,8 @@ interface ProductGridProps {
 }
 
 export default function ProductGrid({ filters }: ProductGridProps) {
+  const router = useRouter();
+
   const filteredProducts = React.useMemo(() => {
     let result = products.filter(
       (product) =>
@@ -54,12 +57,23 @@ export default function ProductGrid({ filters }: ProductGridProps) {
         result.sort((a, b) => b.price - a.price);
         break;
       default:
-        // "Latest Product" or no sort
         break;
     }
 
     return result;
   }, [filters]);
+
+  if (filteredProducts.length === 0) {
+    return (
+      <View style={styles.emptyContainer}>
+        <Icons.notFound width={100} height={100} stroke="#2AA6FF" />
+        <Text style={styles.emptyText}>No Products Found</Text>
+        <Text style={styles.emptySubText}>
+          Try adjusting your search or filter to find what you're looking for.
+        </Text>
+      </View>
+    );
+  }
 
   return (
     <FlatList
@@ -69,7 +83,22 @@ export default function ProductGrid({ filters }: ProductGridProps) {
       showsVerticalScrollIndicator={false}
       columnWrapperStyle={{ justifyContent: "space-between", marginBottom: 16 }}
       renderItem={({ item }) => (
-        <View style={[styles.card, { width: cardWidth }]}>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={() =>
+            router.push({
+              pathname: "/(tabs)/home/productDetails",
+              params: {
+                title: item.title,
+                price: item.price,
+                oldPrice: item.oldPrice,
+                rating: item.rating,
+                image: item.image,
+              },
+            })
+          }
+          style={[styles.card, { width: cardWidth }]}
+        >
           <View style={styles.imageWrapper}>
             <Image source={item.image} style={styles.image} />
             <View style={styles.discountBadge}>
@@ -97,13 +126,33 @@ export default function ProductGrid({ filters }: ProductGridProps) {
               <Text style={styles.buyText}>Buy Now</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </TouchableOpacity>
       )}
     />
   );
 }
 
 const styles = StyleSheet.create({
+  emptyContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingTop: 48,
+  },
+  emptyText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#000",
+    marginTop: 16,
+  },
+  emptySubText: {
+    fontSize: 13,
+    color: "#999",
+    textAlign: "center",
+    paddingHorizontal: 32,
+    marginTop: 4,
+  },
+
   card: {
     backgroundColor: "#fff",
     borderRadius: 16,

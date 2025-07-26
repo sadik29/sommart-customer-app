@@ -7,8 +7,11 @@ import { useRef, useCallback, useState } from "react";
 import * as Haptics from "expo-haptics";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import FilterSheet from "@/components/products/FilterSheet";
+import { useLocalSearchParams } from "expo-router";
+
 
 export default function ProductsScreen() {
+  const { title, price, oldPrice, rating, image } = useLocalSearchParams();
   const navigation = useNavigation();
   const filterRef = useRef<BottomSheetModal>(null);
   const [filters, setFilters] = useState({
@@ -16,11 +19,13 @@ export default function ProductsScreen() {
     priceRange: { low: 0, high: 1000 },
   });
 
+
   const handleFilterPress = useCallback(() => {
-    console.log("Filter button pressed");
-    Haptics.selectionAsync();
-    filterRef.current?.present();
-  }, []);
+  console.log("Filter button pressed");
+  Haptics.selectionAsync();
+  filterRef.current?.present();
+}, []);
+
 
   const handleApplyFilters = useCallback(
     (sort: string, priceRange: { low: number; high: number }) => {

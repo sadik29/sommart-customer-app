@@ -21,7 +21,7 @@ export default function Categories() {
     <View style={styles.wrapper}>
       <View style={styles.header}>
         <Text style={styles.title}>Categories</Text>
-        <TouchableOpacity onPress={() => router.push("/home/categories")}>
+        <TouchableOpacity onPress={() => router.push("/(tabs)/home/categoriesScreen")}>
           <Text style={styles.viewAll}>View All</Text>
         </TouchableOpacity>
       </View>

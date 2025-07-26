@@ -1,6 +1,22 @@
-// This is a shim for web and Android where the tab bar is generally opaque.
-export default undefined;
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Platform, View } from "react-native";
 
-export function useBottomTabOverflow() {
-  return 0;
+export default function TabBarBackground() {
+  return (
+    <SafeAreaView
+      edges={["bottom"]}
+      style={{
+        backgroundColor: "#ffffff",
+        paddingBottom: Platform.OS === "ios" ? 0 : 0,
+      }}
+    >
+      <View
+        style={{
+          height: 70,
+          borderTopWidth: 1,
+          borderTopColor: "#eeeeee",
+        }}
+      />
+    </SafeAreaView>
+  );
 }

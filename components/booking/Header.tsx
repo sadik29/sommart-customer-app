@@ -35,7 +35,6 @@ export default function Header({
   onBackPress,
   showIcon = false,
   iconName = "home-outline",
-  svgIconName = "Chat", 
   iconColor = "#4FBF67",
   iconStyle = {},
   iconPosition = "left",
@@ -51,30 +50,6 @@ export default function Header({
     }
   };
 
-  // const renderIcon = () => {
-  //   if (!showIcon) return null;
-  
-  //   if (iconType === "svg") {
-  //     const IconComponent = Icons[svgIconName];
-  //     return (
-  //       <View style={iconPosition === "left" ? styles.leftIcon : styles.rightIcon}>
-  //         <IconComponent width={24} height={24} fill={iconColor} />
-  //       </View>
-  //     );
-  //   } else {
-
-  //     return (
-  //       <Ionicons
-  //         name={iconName}
-  //         size={24}
-  //         color={iconColor}
-  //         style={[iconPosition === "left" ? styles.leftIcon : styles.rightIcon, iconStyle]}
-  //       />
-  //     );
-  //   }
-  // };
-
-
   const renderIcon = () => {
     if (!showIcon) return null;
   
@@ -82,10 +57,10 @@ export default function Header({
       iconPosition === "left" ? styles.leftIcon : styles.rightIcon;
   
     if (iconType === "svg") {
-      const IconComponent = Icons[svgIconName];
+      // const IconComponent = Icons[svgIconName];
       return (
         <TouchableOpacity onPress={onIconPress} style={iconWrapperStyle} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-          <IconComponent width={24} height={24} fill={iconColor} />
+          {/* <IconComponent width={24} height={24} fill={iconColor} /> */}
         </TouchableOpacity>
       );
     } else {

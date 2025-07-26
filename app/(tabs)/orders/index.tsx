@@ -8,7 +8,7 @@ export default function BookingScreen() {
   return (
     <View style={styles.container}>
       <Header
-      title='Orders'
+        title="Orders"
       />
     </View>
   );

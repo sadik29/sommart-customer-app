@@ -45,7 +45,7 @@ export default function Offers() {
     <View style={styles.wrapper}>
       <View style={styles.header}>
         <Text style={styles.title}>Offers</Text>
-        <TouchableOpacity onPress={() => router.push("/home/products")}>
+        <TouchableOpacity onPress={() => router.push("/(tabs)/home/productsScreen")}>
           <Text style={styles.viewAll}>View All</Text>
         </TouchableOpacity>
       </View>

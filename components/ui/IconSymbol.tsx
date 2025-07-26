@@ -15,14 +15,10 @@ type IconSymbolName = keyof typeof MAPPING;
  */
 const MAPPING = {
   'house.fill': 'home',
-  'ticket.fill': 'confirmation-number',
-  'bus.fill': 'directions-bus-filled',
-  'bookmark.fill': 'bookmark',
   'paperplane.fill': 'send',
   'chevron.left.forwardslash.chevron.right': 'code',
   'chevron.right': 'chevron-right',
 } as IconMapping;
-
 
 /**
  * An icon component that uses native SF Symbols on iOS, and Material Icons on Android and web.

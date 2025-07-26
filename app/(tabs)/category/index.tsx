@@ -7,8 +7,8 @@ import Header from '@/components/booking/Header';
 export default function BookingScreen() {
   return (
     <View style={styles.container}>
-      <Header 
-      title='Category'
+      <Header
+        title="Category"
       />
     </View>
   );

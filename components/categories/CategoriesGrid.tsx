@@ -6,6 +6,7 @@ import {
   FlatList,
   Dimensions,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { Icons } from "@/assets/Icons";
 
@@ -25,7 +26,7 @@ const subcategoriesMap: Record<string, { name: string; icon: any }[]> = {
   More: Array(6).fill({ name: "More", icon: Icons.categories }),
 };
 
-const itemSize = (Dimensions.get("window").width - 96) / 3;
+const itemSize = (Dimensions.get("window").width - 90 - 48) / 3;
 
 export default function CategoriesGrid() {
   const [selected, setSelected] = useState("Accessories");
@@ -34,8 +35,8 @@ export default function CategoriesGrid() {
 
   return (
     <View style={styles.container}>
-      {/* Left vertical menu */}
-      <View style={styles.leftMenu}>
+      {/* Left vertical scrollable menu */}
+      <ScrollView style={styles.leftMenu} showsVerticalScrollIndicator={false}>
         {categoriesLeft.map((cat, index) => {
           const isActive = cat.name === selected;
           return (
@@ -53,7 +54,7 @@ export default function CategoriesGrid() {
             </TouchableOpacity>
           );
         })}
-      </View>
+      </ScrollView>
 
       {/* Right subcategory grid */}
       <FlatList
@@ -85,7 +86,6 @@ const styles = StyleSheet.create({
     width: 90,
     backgroundColor: "#F5F7FA",
     paddingVertical: 8,
-    alignItems: "center",
   },
   menuItem: {
     alignItems: "center",

@@ -1,8 +1,9 @@
-import HomeSvg from './home.svg';
-import CategoryIcon from './category.svg';
-import CartIcon from './cart.svg';
-import OrdersIcon from './orders.svg';
-import ProfileIcon from './profile.svg';
+import home_ from './home.tsx';
+import category__ from './category.tsx';
+import cart_ from './cart.tsx';
+import orders_ from './orders.tsx';
+import profile_ from './profile.tsx';
+
 import Sommart from './SOMMART-1 1.svg';
 import facebook from './facebook.png';
 import google from './google.png';
@@ -20,13 +21,15 @@ import items from './items.svg';
 import more from './more.svg';
 import back from './back.svg';
 import filter from './filter.svg';
+import notFound from './notFound.svg';
 
 export const Icons = {
-  Home: HomeSvg,
-  category: CategoryIcon,
-  cart: CartIcon,
-  orders: OrdersIcon,
-  Profile: ProfileIcon,
+  home_,
+  category__: category__,
+  cart_,
+  orders_,
+  profile_,
+
   Sommart: Sommart,
   facebook,
   google,
@@ -44,4 +47,5 @@ export const Icons = {
   more,
   back,
   filter,
+  notFound,
 };

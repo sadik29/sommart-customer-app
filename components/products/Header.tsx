@@ -18,7 +18,7 @@ export default function Header({ onBackPress, onFilterPress }: Props) {
           </TouchableOpacity>
           <Text style={styles.title}>Products</Text>
           <TouchableOpacity style={styles.cartWrapper}>
-            <Icons.cart width={20} height={20} stroke="#000" />
+            <Icons.cart_ width={20} height={20} stroke="#000" />
             <View style={styles.cartBadge} />
           </TouchableOpacity>
         </View>

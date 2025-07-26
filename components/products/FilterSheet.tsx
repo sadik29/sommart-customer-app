@@ -3,9 +3,13 @@ import {
   BottomSheetBackdropProps,
 } from "@gorhom/bottom-sheet";
 import { BlurView } from "expo-blur";
-import { Ionicons } from "@expo/vector-icons";
-import { Icons } from "@/assets/Icons";
-import React, { forwardRef, useMemo, useState, useCallback } from "react";
+import MultiSlider from "@ptomasroos/react-native-multi-slider";
+import React, {
+  forwardRef,
+  useMemo,
+  useState,
+  useCallback,
+} from "react";
 import {
   View,
   Text,
@@ -29,29 +33,20 @@ const sortOptions = [
   "High to low price",
 ];
 
-const priceRangePresets = [
-  { label: "$0 - $100", low: 0, high: 100 },
-  { label: "$100 - $300", low: 100, high: 300 },
-  { label: "$300 - $600", low: 300, high: 600 },
-  { label: "$600 - $1000", low: 600, high: 1000 },
-];
-
-const CustomBackdrop = ({ style }: BottomSheetBackdropProps) => {
-  return (
-    <View style={[StyleSheet.absoluteFill, style]}>
-      <BlurView intensity={80} tint="light" style={StyleSheet.absoluteFill} />
-      <View
-        style={[
-          StyleSheet.absoluteFill,
-          { backgroundColor: "rgba(255,255,255,0.4)" },
-        ]}
-      />
-    </View>
-  );
-};
+const CustomBackdrop = ({ style }: BottomSheetBackdropProps) => (
+  <View style={[StyleSheet.absoluteFill, style]}>
+    <BlurView intensity={80} tint="light" style={StyleSheet.absoluteFill} />
+    <View
+      style={[
+        StyleSheet.absoluteFill,
+        { backgroundColor: "rgba(255,255,255,0.4)" },
+      ]}
+    />
+  </View>
+);
 
 const FilterSheet = forwardRef<BottomSheetModal, Props>(({ onApply }, ref) => {
-  const snapPoints = useMemo(() => ["70%"], []);
+  const snapPoints = useMemo(() => ["65%"], []);
   const [selectedSort, setSelectedSort] = useState("Latest Product");
   const [selectedPriceRange, setSelectedPriceRange] = useState({
     low: 0,
@@ -63,9 +58,7 @@ const FilterSheet = forwardRef<BottomSheetModal, Props>(({ onApply }, ref) => {
       sort: selectedSort,
       priceRange: selectedPriceRange,
     });
-    if (ref && "current" in ref && ref.current) {
-      ref.current.dismiss(); // Use dismiss() instead of close()
-    }
+    ref?.current?.dismiss();
   }, [selectedSort, selectedPriceRange, onApply, ref]);
 
   const handleClear = useCallback(() => {
@@ -76,73 +69,70 @@ const FilterSheet = forwardRef<BottomSheetModal, Props>(({ onApply }, ref) => {
   return (
     <BottomSheetModal
       ref={ref}
-      index={-1} // Start closed, open with present()
+      index={0}
       snapPoints={snapPoints}
       enablePanDownToClose
+      backdropComponent={(props) => <CustomBackdrop {...props} />}
       backgroundStyle={{
         backgroundColor: "#fff",
         borderTopLeftRadius: 24,
         borderTopRightRadius: 24,
       }}
-      backdropComponent={(props) => <CustomBackdrop {...props} />}
     >
       <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Filter</Text>
-          <TouchableOpacity
-            onPress={() => ref?.current?.dismiss()}
-            style={styles.closeButton}
-          >
-            <Ionicons name="close" size={20} color="#000" />
-          </TouchableOpacity>
-        </View>
+        <ScrollView
+          contentContainerStyle={{ paddingBottom: 40 }}
+          showsVerticalScrollIndicator={false}
+        >
+          <Text style={styles.sectionTitle}>Price Range</Text>
+          <View style={styles.sliderContainer}>
+            <Text style={styles.rangeLabel}>
+              ${selectedPriceRange.low.toFixed(2)} - ${selectedPriceRange.high.toFixed(2)}
+            </Text>
+            <MultiSlider
+              values={[selectedPriceRange.low, selectedPriceRange.high]}
+              min={0}
+              max={1000}
+              step={10}
+              onValuesChange={(values) =>
+                setSelectedPriceRange({ low: values[0], high: values[1] })
+              }
+              selectedStyle={{ backgroundColor: "#2AA6FF" }}
+              unselectedStyle={{ backgroundColor: "#E0E0E0" }}
+              trackStyle={{ height: 4 }}
+              markerStyle={{
+                height: 20,
+                width: 20,
+                borderRadius: 10,
+                backgroundColor: "#00487C",
+              }}
+              containerStyle={{ marginTop: 16 }}
+            />
+          </View>
 
-        <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
-          <Text style={styles.sectionTitle}>Sort By</Text>
+          <Text style={styles.sortLabel}>Sort</Text>
           {sortOptions.map((option) => (
             <TouchableOpacity
               key={option}
-              style={styles.optionRow}
+              style={styles.sortItem}
               onPress={() => setSelectedSort(option)}
             >
-              <Text style={styles.optionText}>{option}</Text>
+              <Text style={styles.sortText}>{option}</Text>
               <View
                 style={[
-                  styles.checkbox,
-                  selectedSort === option && styles.checkboxSelected,
+                  styles.radioOuter,
+                  {
+                    borderColor:
+                      selectedSort === option ? "#2AA6FF" : "#D1D5DB",
+                  },
                 ]}
               >
                 {selectedSort === option && (
-                  <Ionicons name="checkmark" size={14} color="#fff" />
+                  <View style={styles.radioInner} />
                 )}
               </View>
             </TouchableOpacity>
           ))}
-
-          <Text style={[styles.sectionTitle, { marginTop: 24 }]}>
-            Price Range
-          </Text>
-          {priceRangePresets.map((range) => {
-            const selected =
-              selectedPriceRange.low === range.low &&
-              selectedPriceRange.high === range.high;
-            return (
-              <TouchableOpacity
-                key={range.label}
-                style={styles.optionRow}
-                onPress={() => setSelectedPriceRange(range)}
-              >
-                <Text style={styles.optionText}>{range.label}</Text>
-                <View
-                  style={[styles.checkbox, selected && styles.checkboxSelected]}
-                >
-                  {selected && (
-                    <Ionicons name="checkmark" size={14} color="#fff" />
-                  )}
-                </View>
-              </TouchableOpacity>
-            );
-          })}
         </ScrollView>
 
         <View style={styles.footer}>
@@ -164,84 +154,83 @@ export default FilterSheet;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 16,
-    paddingTop: 16,
     backgroundColor: "#fff",
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 16,
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#1B1B1B",
-  },
-  closeButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#E0E0E0",
-    alignItems: "center",
-    justifyContent: "center",
+    paddingHorizontal: 20,
+    paddingTop: 8,
   },
   sectionTitle: {
     fontSize: 16,
     fontWeight: "700",
     color: "#1B1B1B",
-    marginBottom: 12,
   },
-  optionRow: {
+  sliderContainer: {
+    alignItems: "center",
+    marginBottom: 24,
+  },
+  rangeLabel: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#2AA6FF",
+  },
+  sortLabel: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#1B1B1B",
+    marginBottom: 16,
+  },
+  sortItem: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 16,
+    paddingVertical: 14,
+    paddingHorizontal: 12,
+    backgroundColor: "#F9F9F9",
+    borderRadius: 12,
+    marginBottom: 12,
     alignItems: "center",
   },
-  optionText: {
+  sortText: {
     fontSize: 15,
     color: "#333",
   },
-  checkbox: {
+  radioOuter: {
     width: 20,
     height: 20,
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: "#BDBDBD",
-  },
-  checkboxSelected: {
-    backgroundColor: "#0AB247",
-    borderColor: "#0AB247",
-    justifyContent: "center",
+    borderRadius: 10,
+    borderWidth: 2,
     alignItems: "center",
+    justifyContent: "center",
+  },
+  radioInner: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: "#2AA6FF",
   },
   footer: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 12,
-    paddingVertical: 16,
+    paddingTop: 16,
     borderTopWidth: 1,
     borderTopColor: "#E0E0E0",
   },
   clearBtn: {
     width: "48%",
-    backgroundColor: "#F1F1F1",
+    backgroundColor: "#2AA6FF",
     paddingVertical: 14,
-    borderRadius: 12,
+    borderRadius: 100,
     alignItems: "center",
   },
   applyBtn: {
     width: "48%",
-    backgroundColor: "#0AB247",
+    backgroundColor: "#00487C",
     paddingVertical: 14,
-    borderRadius: 12,
+    borderRadius: 100,
     alignItems: "center",
   },
   clearText: {
-    color: "#333",
-    fontWeight: "500",
+    color: "#fff",
+    fontWeight: "600",
     fontSize: 15,
   },
   applyText: {
